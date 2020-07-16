@@ -1,0 +1,16 @@
+[package]
+name    = "syft_python"
+version = "0.1.0"
+authors = ["Ben Szymkow <simcof@gmail.com>", "Madhava Jay <me@madhavajay.com>"]
+edition = "2018"
+
+[lib]
+name       = "syft"
+crate-type = ["cdylib"]
+
+[dependencies]
+syft    = { version = "^0", path = "../../syft" }
+pyo3    = { version = "0.11.0", features = ["extension-module"] }
+tokio   = { version = "0.2.21", features = ["full"] }
+futures = "0.3"
+prost   = "0.6.1"

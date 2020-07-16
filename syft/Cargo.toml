@@ -1,0 +1,19 @@
+[package]
+name    = "syft"
+version = "0.1.0"
+authors = ["Ben Szymkow <simcof@gmail.com>", "Madhava Jay <me@madhavajay.com>"]
+edition = "2018"
+
+[lib]
+name = "syft"
+
+[dependencies]
+tokio       = { version = "0.2.21", features = ["macros"] }
+tonic       = { version = "0.2.1", features = ["transport"] }
+prost       = "0.6"
+lazy_static = "1.4.0"
+uuid        = { version = "0.8", features = ["v4"] }
+url         = "2.1.1"
+
+[build-dependencies]
+tonic-build = "0.2"

@@ -1,0 +1,29 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+@EXPLICIT
+https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
+https://conda.anaconda.org/anaconda/linux-64/ca-certificates-2020.6.24-0.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/ld_impl_linux-64-2.34-h53a641e_5.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/libstdcxx-ng-9.2.0-hdf63c60_2.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/libgomp-9.2.0-h24d8f2e_2.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-0_gnu.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/libgcc-ng-9.2.0-h24d8f2e_2.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/libffi-3.2.1-he1b5a44_1007.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/ncurses-6.1-hf484d3e_1002.tar.bz2
+https://conda.anaconda.org/anaconda/linux-64/openssl-1.1.1g-h7b6447c_0.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/xz-5.2.5-h516909a_1.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/zlib-1.2.11-h516909a_1006.tar.bz2
+https://conda.anaconda.org/anaconda/linux-64/libprotobuf-3.12.3-hd408876_0.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/readline-8.0-h46ee950_1.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/tk-8.6.10-hed695b0_0.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/sqlite-3.32.3-hcee41ef_1.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/python-3.8.3-cpython_he5300dc_0.tar.bz2
+https://conda.anaconda.org/anaconda/linux-64/certifi-2020.6.20-py38_0.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/python_abi-3.8-1_cp38.tar.bz2
+https://conda.anaconda.org/anaconda/noarch/six-1.15.0-py_0.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/maturin-0.8.2-py38h1e0a361_0.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/setuptools-49.1.0-py38h32f6830_0.tar.bz2
+https://conda.anaconda.org/anaconda/linux-64/protobuf-3.12.3-py38he6710b0_0.tar.bz2
+https://conda.anaconda.org/conda-forge/noarch/wheel-0.34.2-py_1.tar.bz2
+https://conda.anaconda.org/conda-forge/noarch/pip-20.1.1-py_1.tar.bz2
