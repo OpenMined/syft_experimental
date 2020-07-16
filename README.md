@@ -1,4 +1,6 @@
-# PySyft
+# Syft Experiment
+
+This repo is a coordinated effort to build a Rust alternative for PySyft.
 
 This README.md is formatted with remark:
 mrmlnc.vscode-remark
