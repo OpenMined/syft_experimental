@@ -1,11 +1,7 @@
-import sys
-
-sys.path.append("../../protos/python")
-
 from typing import Optional, Dict, Any, List, Callable
 
-import pysyft
-from message_pb2 import SyftMessage
+from syft.core import message as syft_message
+from syft.protos.message_pb2 import SyftMessage
 
 
 def make_message(
@@ -41,7 +37,7 @@ if __name__ == "__main__":
     )
     request_bytes = message.SerializeToString()
     print(f"Python sending to rust: {message} {request_bytes}")
-    response_bytes = pysyft.message.run_class_method_message(
+    response_bytes = syft_message.run_class_method_message(
         "localhost", "message", request_bytes
     )
 

@@ -3,6 +3,8 @@ use pyo3::types::{PyBytes, PyUnicode};
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use syft::message::SyftMessage;
 
+// the module will be syft but with a mixed python project it becomes syft.syft
+// so this needs to be re-exported from a __init__.py file with: from .syft import *
 #[pymodule]
 fn syft(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_wrapped(wrap_pymodule!(message))?;

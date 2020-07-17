@@ -97,7 +97,8 @@ Add to settings:
 
 ```
 {
-  "evenBetterToml.formatter.reorderKeys": false
+  "evenBetterToml.formatter.reorderKeys": false,
+  "evenBetterToml.formatter.alignEntries": true
 }
 ```
 
@@ -168,7 +169,7 @@ $ pipenv install --dev --skip-lock
 
 #### Conda
 
-Create your conda environment, navigate to the ./core/platforms/python directory:
+Create your conda environment, navigate to the /platforms/python directory:
 
 ```
 conda create --name syft --file spec-file.txt
@@ -176,7 +177,7 @@ conda create --name syft --file spec-file.txt
 
 #### pip and virtualenv
 
-Create a virtualenv in the PySyft/core/platforms/python folder and install the packages inside requirements.txt
+Create a virtualenv in the /platforms/python folder and install the packages inside requirements.txt
 
 ## Python Development
 
@@ -195,10 +196,11 @@ $ python tests/message.py
 ```
 
 ## Build Python Wheel
+
 During this step we:
+
 - Build and install the Python wheel
 - Compile the protos for Python use and output to the ./src/syft/protos directory
-
 
 If you are using pipenv:
 
@@ -210,7 +212,7 @@ $ maturin build -i python
 $ pip install `find -L ./target/wheels -name "*.whl"`
 ```
 
-If you are using conda and have you conda environment activated (```conda activate syft```):
+If you are using conda and have you conda environment activated (`conda activate syft`):
 
 ```
 $ cd platforms/python
@@ -218,4 +220,3 @@ $ touch build.rs
 $ maturin build -i python
 $ pip install `find -L ./target/wheels -name "*.whl"`
 ```
-

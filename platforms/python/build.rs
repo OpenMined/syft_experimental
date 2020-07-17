@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         Command::new("sh")
             .arg("-c")
-            .arg("protoc -I=../../protos --python_out=../../../src/syft/protos ../../protos/message.proto")
+            .arg("protoc -I=../../protos --python_out=./syft/protos ../../protos/message.proto")
             .output()
             .expect("failed to execute process")
     };
