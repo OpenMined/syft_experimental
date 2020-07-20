@@ -1,19 +1,43 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyUnicode};
 use pyo3::{wrap_pyfunction, wrap_pymodule};
+use std::thread;
 use syft::message::SyftMessage;
+use syft::worker::start_on_runtime;
 
 // the module will be syft but with a mixed python project it becomes syft.syft
 // so this needs to be re-exported from a __init__.py file with: from .syft import *
 #[pymodule]
 fn syft(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_wrapped(wrap_pymodule!(message))?;
+    m.add_wrapped(wrap_pymodule!(node))?;
     Ok(())
 }
 
 #[pymodule]
 fn message(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_wrapped(wrap_pyfunction!(run_class_method_message))?;
+    Ok(())
+}
+
+#[pymodule]
+fn node(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_wrapped(wrap_pyfunction!(start))?;
+    Ok(())
+}
+
+#[pyfunction]
+fn start() -> PyResult<()> {
+    thread::spawn(move || {
+        println!("here");
+        let result = start_on_runtime();
+        println!("there");
+        match result {
+            Ok(_) => println!("gRPC Server thread finished"),
+            Err(err) => println!("gRPC Server thread failed with error. {}", err),
+        }
+    });
+
     Ok(())
 }
 
