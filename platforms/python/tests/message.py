@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any, List, Callable
 
-from syft.core import message as syft_message
+from syft import message as syft_message
 from syft.protos.message_pb2 import SyftMessage
 
 

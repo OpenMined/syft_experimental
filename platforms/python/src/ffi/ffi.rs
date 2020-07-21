@@ -29,9 +29,7 @@ fn node(_py: Python, m: &PyModule) -> PyResult<()> {
 #[pyfunction]
 fn start() -> PyResult<()> {
     thread::spawn(move || {
-        println!("here");
         let result = start_on_runtime();
-        println!("there");
         match result {
             Ok(_) => println!("gRPC Server thread finished"),
             Err(err) => println!("gRPC Server thread failed with error. {}", err),
