@@ -1,9 +1,23 @@
 # Syft Experiment
 
-This repo is a coordinated effort to build a Rust alternative for PySyft.
+This repo is a coordinated effort to build a Rust alternative for PySyft, with native
+host language bindings.
 
 This README.md is formatted with remark:
 mrmlnc.vscode-remark
+
+## Monorepo Structure
+
+The folder structure looks like this:
+
+```
+├── platforms
+│   └── python    <- Syft Python Host Code
+├── protos        <- Shared Proto definitions
+└── syft          <- Syft Core Rust Code
+    ├── src
+    └── target
+```
 
 ## Setup
 
@@ -55,7 +69,8 @@ $ rustup default nightly
 
 ### Formatting and Linting
 
-Rust comes with an opinionated formatter and linter so we will mandate that these are used.
+Rust comes with an opinionated formatter and linter so we will mandate that these
+are used.
 
 Install Rust Format:
 
@@ -108,13 +123,15 @@ Add to settings:
 
 Make sure you have `python3.7+`
 
-We use a virtual environment to isolate the syft core python wheel development and build process.
+We use a virtual environment to isolate the syft core python wheel development and
+build process.
 
 We include support for Pipenv, Conda and pip with virtualenv.
 
 ### Formatting and Linting
 
-To keep code clean and bug free we mandate all code inside syft core python, uses an agreed upon set of linting and formatting standards.
+To keep code clean and bug free we mandate all code inside syft core python, uses an
+agreed upon set of linting and formatting standards.
 
 - black - https://github.com/psf/black
 - isort - https://github.com/timothycrosley/isort
@@ -126,7 +143,8 @@ $ pip install black isort mypy
 
 ### VSCode Configuration
 
-Add these to your settings.json, making sure to update the paths as necessary to your platform.
+Add these to your settings.json, making sure to update the paths as necessary to your
+platform.
 
 ```
 {
@@ -172,12 +190,32 @@ $ pipenv install --dev --skip-lock
 Create your conda environment, navigate to the /platforms/python directory:
 
 ```
-conda create --name syft --file spec-file.txt
+$ conda create --name syft --file requirements.txt
 ```
 
 #### pip and virtualenv
 
-Create a virtualenv in the /platforms/python folder and install the packages inside requirements.txt
+Create a virtualenv in the /platforms/python folder and install the packages inside
+requirements.txt
+
+### Virtualenv
+
+Make sure to enable your virtualenv from Pipenv, conda or other virtualenv system when
+doing any commands relating to maturin or python.
+
+If you are using pipenv:
+
+```
+$ cd platforms/python
+$ pipenv shell
+```
+
+If you are using conda:
+
+```
+$ cd platforms/python
+$ conda activate syft
+```
 
 ## Python Development
 
@@ -189,34 +227,78 @@ $ maturin develop
 
 ## Python Tests
 
-To test it out try:
+We are using pytest which is listed in the Pipfile / requirements.txt.
+
+Run tests from the platforms/python directory inside your virtualenv:
 
 ```
-$ python tests/message.py
+$ cd platforms/python
+$ maturin develop; pytest
 ```
+
+## Mixed Python & Rust Module Imports
+
+The rust crate pyo3 allows us to mix compiled Rust code as a CPython module and vanilla
+python code in the same wheel. The vanilla python code must go into a folder named the
+same as the module and must contain at least a single `__init__.py` file in that folder.
+That is why you will see this inside /platforms/python:
+
+```
+├── src           <--- Rust Code
+│   └── ffi
+├── syft          <--- Python Code
+│   ├── message
+│   ├── node
+│   └── protos
+├── target
+│   ├── debug
+│   ├── rls
+│   └── wheels
+└── tests         <--- Python Tests
+```
+
+To allow for a nice consistent import interface there is some code inside the vanilla
+python source which acts to convert the awkward issues with CPython module names
+and the way the Rust pyo3 submodules are defined.
+
+Without this fix, importing a Rust module defined as syft.message might look like:
+
+```
+from syft.syft import message
+```
+
+Importing further nested items results in an error:
+
+```
+from syft.syft.message import run_class_method_message
+>>> ModuleNotFoundError: No module named 'syft.syft.message';
+```
+
+However by re-exporting the modules using a matching directory structure and
+`__init__.py` files we can provide a clean interface:
+
+```
+# import from rust in platforms/python/src
+from syft.message import run_class_method_message
+# import from vanilla python in platforms/python/syft
+```
+
+https://github.com/PyO3/maturin/issues/326
 
 ## Build Python Wheel
 
-During this step we:
+During this step:
 
-- Build and install the Python wheel
-- Compile the protos for Python use and output to the ./src/syft/protos directory
+- The syft core rust library is built
+- The synthesized python interface to the protos are compiled with protoc
+- The python platform ffi code in platforms/python/src is compiled for your system arch
+- The vanilla python code inside platforms/python/syft is added
+- Code inside the `__init__.py` files allows for a consistent module import syntax
+- A wheel is created with both these mixed source files
 
-If you are using pipenv:
-
-```
-$ cd platforms/python
-$ pipenv shell
-$ touch build.rs
-$ maturin build -i python
-$ pip install `find -L ./target/wheels -name "*.whl"`
-```
-
-If you are using conda and have you conda environment activated (`conda activate syft`):
+Build wheel and install wheel:
 
 ```
-$ cd platforms/python
-$ touch build.rs
 $ maturin build -i python
 $ pip install `find -L ./target/wheels -name "*.whl"`
 ```

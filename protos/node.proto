@@ -2,28 +2,20 @@ syntax = "proto3";
 package node;
 
 service Config {
-    rpc ConnectPeer(ConnectRequest) returns (ConnectReply);
-    rpc Capabilities(NodeRequest) returns (CapabilityReply);
-    rpc RegisterCapability(RegisterCapabilityRequest) returns (CapabilityReply);
+  rpc ConnectPeer(ConnectRequest) returns (ConnectReply);
+  rpc Capabilities(NodeRequest) returns (CapabilityReply);
+  rpc RegisterCapability(RegisterCapabilityRequest) returns (CapabilityReply);
 }
 
-message ConnectRequest {
-    string client_node_id = 1;
-}
+message ConnectRequest { string client_node_id = 1; }
 
-message ConnectReply {
-    string node_id = 1;
-}
+message ConnectReply { string node_id = 1; }
 
-message NodeRequest {
-    string node_id=1;
-}
+message NodeRequest { string node_id = 1; }
 
 message RegisterCapabilityRequest {
-    NodeRequest node_request = 1;
-    string capability_name = 2;
+  NodeRequest node_request = 1;
+  string capability_name = 2;
 }
 
-message CapabilityReply {
-    repeated string capability=1;
-}
+message CapabilityReply { repeated string capability = 1; }

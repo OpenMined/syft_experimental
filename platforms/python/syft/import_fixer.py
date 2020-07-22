@@ -42,3 +42,8 @@ def fix_imports(lcl: Dict[str, Any], init_file_path: str, debug: bool = False) -
             if debug:
                 print(f"Loading: {submodule}.{k}")
             lcl[k] = getattr(submodule, k)
+
+
+# re-export a python module, class or function onto the current module level
+def reexport(lcl: Dict[str, Any], obj: Any) -> None:
+    lcl[obj.__name__] = obj
