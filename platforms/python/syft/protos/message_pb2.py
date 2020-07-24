@@ -15,11 +15,11 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='message.proto',
-  package='syft',
+  package='message',
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rmessage.proto\x12\x04syft\"\xa6\x02\n\x0bSyftMessage\x12\x11\n\x07id_null\x18\x64 \x01(\x08H\x00\x12\x12\n\x08local_id\x18\x65 \x01(\tH\x00\x12\x10\n\x06remote\x18\x66 \x01(\tH\x00\x12\x14\n\tpath_null\x18\xc8\x01 \x01(\x08H\x01\x12\x0f\n\x04path\x18\xc9\x01 \x01(\tH\x01\x12\r\n\x04\x61rgs\x18\xac\x02 \x03(\t\x12.\n\x06kwargs\x18\x90\x03 \x03(\x0b\x32\x1d.syft.SyftMessage.KwargsEntry\x12\x15\n\nhas_object\x18\xf4\x03 \x01(\x08H\x02\x12\x11\n\x06Object\x18\xf5\x03 \x01(\x0cH\x02\x1a-\n\x0bKwargsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x04\n\x02IdB\x06\n\x04PathB\x11\n\x0fObjectReference2\x10\n\x0eMessageServiceb\x06proto3'
+  serialized_pb=b'\n\rmessage.proto\x12\x07message\"\xe0\x01\n\x0bSyftMessage\x12\x11\n\x07id_null\x18\x64 \x01(\x08H\x00\x12\x12\n\x08local_id\x18\x65 \x01(\tH\x00\x12\x10\n\x06remote\x18\x66 \x01(\tH\x00\x12\x13\n\ncapability\x18\xc9\x01 \x01(\t\x12\r\n\x04\x61rgs\x18\xac\x02 \x03(\t\x12\x31\n\x06kwargs\x18\x90\x03 \x03(\x0b\x32 .message.SyftMessage.KwargsEntry\x12\x0c\n\x03obj\x18\xf5\x03 \x01(\x0c\x1a-\n\x0bKwargsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x04\n\x02Id2D\n\x07Message\x12\x39\n\x0bSendMessage\x12\x14.message.SyftMessage\x1a\x14.message.SyftMessageb\x06proto3'
 )
 
 
@@ -27,21 +27,21 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _SYFTMESSAGE_KWARGSENTRY = _descriptor.Descriptor(
   name='KwargsEntry',
-  full_name='syft.SyftMessage.KwargsEntry',
+  full_name='message.SyftMessage.KwargsEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='syft.SyftMessage.KwargsEntry.key', index=0,
+      name='key', full_name='message.SyftMessage.KwargsEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='value', full_name='syft.SyftMessage.KwargsEntry.value', index=1,
+      name='value', full_name='message.SyftMessage.KwargsEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -59,76 +59,62 @@ _SYFTMESSAGE_KWARGSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=240,
-  serialized_end=285,
+  serialized_start=200,
+  serialized_end=245,
 )
 
 _SYFTMESSAGE = _descriptor.Descriptor(
   name='SyftMessage',
-  full_name='syft.SyftMessage',
+  full_name='message.SyftMessage',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id_null', full_name='syft.SyftMessage.id_null', index=0,
+      name='id_null', full_name='message.SyftMessage.id_null', index=0,
       number=100, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='local_id', full_name='syft.SyftMessage.local_id', index=1,
+      name='local_id', full_name='message.SyftMessage.local_id', index=1,
       number=101, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='remote', full_name='syft.SyftMessage.remote', index=2,
+      name='remote', full_name='message.SyftMessage.remote', index=2,
       number=102, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='path_null', full_name='syft.SyftMessage.path_null', index=3,
-      number=200, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='path', full_name='syft.SyftMessage.path', index=4,
+      name='capability', full_name='message.SyftMessage.capability', index=3,
       number=201, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='args', full_name='syft.SyftMessage.args', index=5,
+      name='args', full_name='message.SyftMessage.args', index=4,
       number=300, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='kwargs', full_name='syft.SyftMessage.kwargs', index=6,
+      name='kwargs', full_name='message.SyftMessage.kwargs', index=5,
       number=400, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='has_object', full_name='syft.SyftMessage.has_object', index=7,
-      number=500, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='Object', full_name='syft.SyftMessage.Object', index=8,
+      name='obj', full_name='message.SyftMessage.obj', index=6,
       number=501, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=b"",
       message_type=None, enum_type=None, containing_type=None,
@@ -146,23 +132,13 @@ _SYFTMESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
-      name='Id', full_name='syft.SyftMessage.Id',
+      name='Id', full_name='message.SyftMessage.Id',
       index=0, containing_type=None,
       create_key=_descriptor._internal_create_key,
     fields=[]),
-    _descriptor.OneofDescriptor(
-      name='Path', full_name='syft.SyftMessage.Path',
-      index=1, containing_type=None,
-      create_key=_descriptor._internal_create_key,
-    fields=[]),
-    _descriptor.OneofDescriptor(
-      name='ObjectReference', full_name='syft.SyftMessage.ObjectReference',
-      index=2, containing_type=None,
-      create_key=_descriptor._internal_create_key,
-    fields=[]),
   ],
-  serialized_start=24,
-  serialized_end=318,
+  serialized_start=27,
+  serialized_end=251,
 )
 
 _SYFTMESSAGE_KWARGSENTRY.containing_type = _SYFTMESSAGE
@@ -176,18 +152,6 @@ _SYFTMESSAGE.fields_by_name['local_id'].containing_oneof = _SYFTMESSAGE.oneofs_b
 _SYFTMESSAGE.oneofs_by_name['Id'].fields.append(
   _SYFTMESSAGE.fields_by_name['remote'])
 _SYFTMESSAGE.fields_by_name['remote'].containing_oneof = _SYFTMESSAGE.oneofs_by_name['Id']
-_SYFTMESSAGE.oneofs_by_name['Path'].fields.append(
-  _SYFTMESSAGE.fields_by_name['path_null'])
-_SYFTMESSAGE.fields_by_name['path_null'].containing_oneof = _SYFTMESSAGE.oneofs_by_name['Path']
-_SYFTMESSAGE.oneofs_by_name['Path'].fields.append(
-  _SYFTMESSAGE.fields_by_name['path'])
-_SYFTMESSAGE.fields_by_name['path'].containing_oneof = _SYFTMESSAGE.oneofs_by_name['Path']
-_SYFTMESSAGE.oneofs_by_name['ObjectReference'].fields.append(
-  _SYFTMESSAGE.fields_by_name['has_object'])
-_SYFTMESSAGE.fields_by_name['has_object'].containing_oneof = _SYFTMESSAGE.oneofs_by_name['ObjectReference']
-_SYFTMESSAGE.oneofs_by_name['ObjectReference'].fields.append(
-  _SYFTMESSAGE.fields_by_name['Object'])
-_SYFTMESSAGE.fields_by_name['Object'].containing_oneof = _SYFTMESSAGE.oneofs_by_name['ObjectReference']
 DESCRIPTOR.message_types_by_name['SyftMessage'] = _SYFTMESSAGE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -196,12 +160,12 @@ SyftMessage = _reflection.GeneratedProtocolMessageType('SyftMessage', (_message.
   'KwargsEntry' : _reflection.GeneratedProtocolMessageType('KwargsEntry', (_message.Message,), {
     'DESCRIPTOR' : _SYFTMESSAGE_KWARGSENTRY,
     '__module__' : 'message_pb2'
-    # @@protoc_insertion_point(class_scope:syft.SyftMessage.KwargsEntry)
+    # @@protoc_insertion_point(class_scope:message.SyftMessage.KwargsEntry)
     })
   ,
   'DESCRIPTOR' : _SYFTMESSAGE,
   '__module__' : 'message_pb2'
-  # @@protoc_insertion_point(class_scope:syft.SyftMessage)
+  # @@protoc_insertion_point(class_scope:message.SyftMessage)
   })
 _sym_db.RegisterMessage(SyftMessage)
 _sym_db.RegisterMessage(SyftMessage.KwargsEntry)
@@ -209,19 +173,29 @@ _sym_db.RegisterMessage(SyftMessage.KwargsEntry)
 
 _SYFTMESSAGE_KWARGSENTRY._options = None
 
-_MESSAGESERVICE = _descriptor.ServiceDescriptor(
-  name='MessageService',
-  full_name='syft.MessageService',
+_MESSAGE = _descriptor.ServiceDescriptor(
+  name='Message',
+  full_name='message.Message',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=320,
-  serialized_end=336,
+  serialized_start=253,
+  serialized_end=321,
   methods=[
+  _descriptor.MethodDescriptor(
+    name='SendMessage',
+    full_name='message.Message.SendMessage',
+    index=0,
+    containing_service=None,
+    input_type=_SYFTMESSAGE,
+    output_type=_SYFTMESSAGE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
 ])
-_sym_db.RegisterServiceDescriptor(_MESSAGESERVICE)
+_sym_db.RegisterServiceDescriptor(_MESSAGE)
 
-DESCRIPTOR.services_by_name['MessageService'] = _MESSAGESERVICE
+DESCRIPTOR.services_by_name['Message'] = _MESSAGE
 
 # @@protoc_insertion_point(module_scope)

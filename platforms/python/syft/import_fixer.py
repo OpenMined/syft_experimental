@@ -4,7 +4,7 @@
 
 import importlib
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 # gets the name of the top level module / package
 package_name = __name__.split(".")[0]
@@ -45,5 +45,8 @@ def fix_imports(lcl: Dict[str, Any], init_file_path: str, debug: bool = False) -
 
 
 # re-export a python module, class or function onto the current module level
-def reexport(lcl: Dict[str, Any], obj: Any) -> None:
-    lcl[obj.__name__] = obj
+def reexport(lcl: Dict[str, Any], obj: Any, alt_name: Optional[str] = None) -> None:
+    key = obj.__name__
+    if alt_name is not None:
+        key = alt_name
+    lcl[key] = obj

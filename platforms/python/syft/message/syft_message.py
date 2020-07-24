@@ -1,4 +1,4 @@
-from syft.protos.message_pb2 import SyftMessage as SyftMessageProto
+from syft.protos import SyftMessageProto
 from syft.message import run_class_method_message
 
 from typing import Optional, Dict, Any, List, Callable
@@ -15,21 +15,26 @@ class SyftMessageProxy:
         self,
         id: Optional[str] = None,
         id_remote: Optional[str] = None,
-        path: Optional[str] = None,
+        capability: Optional[str] = None,
         args: Optional[List[str]] = None,
         kwargs: Optional[Dict[str, str]] = None,
         obj: Optional[Any] = None,
     ):
         request = self.__create_request(
-            id=id, id_remote=id_remote, path=path, args=args, kwargs=kwargs, obj=obj
+            id=id,
+            id_remote=id_remote,
+            capability=capability,
+            args=args,
+            kwargs=kwargs,
+            obj=obj,
         )
         self.response = self.__get_response(
-            address="localhost", capability="message", request=request
+            address="http://[::1]:50051", capability="message", request=request
         )
 
-        if self.response is not None and self.response.Object is not None:
+        if self.response is not None and self.response.obj is not None:
             try:
-                self.obj = pickle.loads(self.response.Object)
+                self.obj = pickle.loads(self.response.obj)
             except Exception as e:
                 print(f"Failed to pickle load the obj bytes: {e}")
                 self.obj = None
@@ -38,7 +43,7 @@ class SyftMessageProxy:
         self,
         id: Optional[str] = None,
         id_remote: Optional[str] = None,
-        path: Optional[str] = None,
+        capability: Optional[str] = None,
         args: Optional[List[str]] = None,
         kwargs: Optional[Dict[str, str]] = None,
         obj: Optional[Any] = None,
@@ -49,8 +54,8 @@ class SyftMessageProxy:
         if id_remote is not None:
             request.remote = id_remote
 
-        if path is not None:
-            request.path = path
+        if capability is not None:
+            request.capability = capability
 
         if args is not None:
             request.args.extend(args)
@@ -60,7 +65,7 @@ class SyftMessageProxy:
                 request.kwargs[key] = value
 
         if obj is not None:
-            request.Object = pickle.dumps(obj)
+            request.obj = pickle.dumps(obj)
 
         return request
 
@@ -70,9 +75,8 @@ class SyftMessageProxy:
         request_bytes = request.SerializeToString()
         try:
             # this is where we are calling rust
-            response_bytes = run_class_method_message(
-                address, capability, request_bytes
-            )
+            print("calling: ", address, capability, request)
+            response_bytes = run_class_method_message(address, request_bytes)
             response = SyftMessageProto()
             response.ParseFromString(bytes(response_bytes))
 
@@ -91,20 +95,24 @@ class SyftMessage(SyftMessageProxy):
     _proxy_map: Dict[str, str] = {
         "id": "local_id",
         "id_remote": "remote",
-        "_self": "obj",
     }
 
     def __init__(
         self,
         id: Optional[str] = None,
         id_remote: Optional[str] = None,
-        path: Optional[str] = None,
+        capability: Optional[str] = None,
         args: Optional[List[str]] = None,
         kwargs: Optional[Dict[str, str]] = None,
         obj: Optional[Any] = None,
     ):
         super().__init__(
-            id=id, id_remote=id_remote, path=path, args=args, kwargs=kwargs, obj=obj
+            id=id,
+            id_remote=id_remote,
+            capability=capability,
+            args=args,
+            kwargs=kwargs,
+            obj=obj,
         )
 
     def __getattr__(self, attr: str) -> Any:

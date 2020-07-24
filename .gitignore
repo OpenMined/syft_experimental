@@ -12,3 +12,5 @@ Cargo.lock
 /platforms/python/syft/*.so
 
 .vscode
+
+.ipynb_checkpoints

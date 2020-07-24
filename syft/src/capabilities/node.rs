@@ -29,8 +29,16 @@ impl Config for ConfigService {
 
         let config = get_config().clone();
 
+        let capabilities = config
+            .lock()
+            .unwrap()
+            .capability_map
+            .iter()
+            .map(|(k, _v)| k.to_owned())
+            .collect();
+
         let reply = CapabilityReply {
-            capability: config.lock().unwrap().capability_map.to_vec(),
+            capability: capabilities,
         };
 
         Ok(Response::new(reply))
@@ -43,13 +51,19 @@ impl Config for ConfigService {
         println!("Got a request: {:?}", request);
 
         let config = get_config().clone();
-        config
+        //let cap = config.lock().unwrap();
+        //     .add_capability(request.into_inner().capability_name, callback);
+
+        let capabilities = config
             .lock()
             .unwrap()
-            .add_capability(request.into_inner().capability_name);
+            .capability_map
+            .iter()
+            .map(|(k, _v)| k.to_owned())
+            .collect();
 
         let reply = CapabilityReply {
-            capability: config.lock().unwrap().capability_map.to_vec(),
+            capability: capabilities,
         };
 
         Ok(Response::new(reply))
@@ -59,17 +73,14 @@ impl Config for ConfigService {
         &self,
         request: Request<ConnectRequest>,
     ) -> Result<Response<ConnectReply>, Status> {
-        println!("Got a request: {:?}", request);
+        let client_node_id = request.into_inner().client_node_id;
 
-        let config = get_config().clone();
-
-        config
-            .lock()
-            .unwrap()
-            .add_peer(request.into_inner().client_node_id);
+        let config = get_config();
+        config.lock().unwrap().add_peer(client_node_id);
+        let node_id = config.lock().unwrap().get_node_id();
 
         let reply = ConnectReply {
-            node_id: config.lock().unwrap().get_node_id(),
+            node_id: node_id.clone(),
         };
 
         Ok(Response::new(reply))

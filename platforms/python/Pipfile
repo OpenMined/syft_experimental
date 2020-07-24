@@ -6,3 +6,4 @@ verify_ssl = true
 maturin  = "*"
 protobuf = "*"
 pytest   = "*"
+jupyter  = "*"
