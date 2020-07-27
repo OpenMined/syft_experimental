@@ -2,7 +2,6 @@ use std::fs;
 
 /// dynamically compiles all protos
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tonic_build::compile_protos("../protos/message.proto")?;
     let files = fs::read_dir("../protos").unwrap();
 
     files

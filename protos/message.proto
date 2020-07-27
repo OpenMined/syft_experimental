@@ -1,26 +1,18 @@
 syntax = "proto3";
-package syft;
+package message;
 
-service MessageService {
-}
+service Message { rpc SendMessage(SyftMessage) returns (SyftMessage); }
 
 message SyftMessage {
-    oneof Id {
-        bool id_null = 100;
-        string local_id = 101;
-        string remote = 102;
-    }
+  oneof Id {
+    bool id_null = 100;
+    string local_id = 101;
+    string remote = 102;
+  }
 
-    oneof Path {
-        bool path_null = 200;
-        string path = 201;
-    }
+  string capability = 201;
 
-    repeated string args=300;
-    map<string, string> kwargs=400; 
-    oneof ObjectReference {
-        bool has_object = 500;
-        bytes Object=501;
-    }
-
+  repeated string args = 300;
+  map<string, string> kwargs = 400;
+  bytes obj = 501;
 }

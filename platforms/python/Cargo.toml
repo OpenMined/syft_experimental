@@ -9,8 +9,7 @@ name       = "syft"
 crate-type = ["cdylib"]
 
 [dependencies]
-syft    = { version = "^0", path = "../../syft" }
-pyo3    = { version = "0.11.0", features = ["extension-module"] }
-tokio   = { version = "0.2.21", features = ["full"] }
-futures = "0.3"
-prost   = "0.6.1"
+syft  = { version = "^0", path = "../../syft" }
+pyo3  = { version = "0.11.1", features = ["extension-module"] }
+tokio = { version = "0.2.22", features = ["full"] }
+prost = "0.6.1"
