@@ -1,7 +1,7 @@
 from syft.protos import SyftMessageProto
 from syft.message import run_class_method_message
 
-from typing import Optional, Dict, Any, List, Callable
+from typing import Optional, Dict, Any, List, Callable, Tuple
 import pickle
 
 
@@ -20,34 +20,6 @@ class SyftMessageProxy:
         kwargs: Optional[Dict[str, str]] = None,
         obj: Optional[Any] = None,
     ):
-        request = self.__create_request(
-            id=id,
-            id_remote=id_remote,
-            capability=capability,
-            args=args,
-            kwargs=kwargs,
-            obj=obj,
-        )
-        self.response = self.__get_response(
-            address="http://[::1]:50051", capability="message", request=request
-        )
-
-        if self.response is not None and self.response.obj is not None:
-            try:
-                self.obj = pickle.loads(self.response.obj)
-            except Exception as e:
-                print(f"Failed to pickle load the obj bytes: {e}")
-                self.obj = None
-
-    def __create_request(
-        self,
-        id: Optional[str] = None,
-        id_remote: Optional[str] = None,
-        capability: Optional[str] = None,
-        args: Optional[List[str]] = None,
-        kwargs: Optional[Dict[str, str]] = None,
-        obj: Optional[Any] = None,
-    ) -> SyftMessageProto:
         request = SyftMessageProto()
         if id is not None:
             request.local_id = id
@@ -67,23 +39,35 @@ class SyftMessageProxy:
         if obj is not None:
             request.obj = pickle.dumps(obj)
 
-        return request
+        self.request = request
 
-    def __get_response(
-        self, address: str, capability: str, request: SyftMessageProto
-    ) -> Optional[SyftMessageProto]:
-        request_bytes = request.SerializeToString()
-        try:
-            # this is where we are calling rust
-            print("calling: ", address, capability, request)
-            response_bytes = run_class_method_message(address, request_bytes)
-            response = SyftMessageProto()
-            response.ParseFromString(bytes(response_bytes))
+    @staticmethod
+    def _deserialize(
+        response_bytes: bytes,
+    ) -> Tuple[SyftMessageProto, Optional[object]]:
+        response = SyftMessageProto()
+        response.ParseFromString(bytes(response_bytes))
+        obj = None
+        if response is not None and response.obj is not None:
+            try:
+                obj = pickle.loads(response.obj)
+            except Exception as e:
+                print(f"Failed to pickle load the obj bytes: {e}")
 
-            return response
-        except Exception as e:
-            print(f"Python failed to decode response {response_bytes}, error: {e}")
-            return None
+        return response, obj
+
+    def send(self, address: str) -> Optional[object]:
+        if self.request is not None:
+            request_bytes = self.request.SerializeToString()
+            try:
+                # this is where we are calling rust
+                response_bytes = run_class_method_message(address, request_bytes)
+                _, obj = SyftMessageProxy._deserialize(response_bytes)
+                if obj is not None:
+                    return obj
+            except Exception as e:
+                print(f"Python failed to decode response {response_bytes}, error: {e}")
+        return None
 
 
 class SyftMessage(SyftMessageProxy):
@@ -127,3 +111,62 @@ class SyftMessage(SyftMessageProxy):
         except Exception as e:
             print(f"Unable to find attr: {property_key} on proxy object. {e}")
             return None
+
+
+def _make_message(obj: object, capability: str) -> SyftMessageProto:
+    request = SyftMessageProto()
+    request.capability = capability
+    request.obj = pickle.dumps(obj)
+    return request
+
+
+def _read_message(request_bytes: bytes) -> Optional[SyftMessageProto]:
+    try:
+        request = SyftMessageProto()
+        request.ParseFromString(bytes(request_bytes))
+        return request
+    except Exception as e:
+        print(f"Python failed to decode request {repr(request_bytes)}, error: {e}")
+        return None
+
+
+def create_handler(handler: Callable[[object], object]) -> Callable[[bytes], bytes]:
+    def wrapped_handler(request_bytes: bytes) -> bytes:
+        try:
+            message = _read_message(request_bytes)
+            if message is not None:
+                data = pickle.loads(message.obj)
+                result = handler(data)
+                response = _make_message(result, "response")
+
+                # serialize protobuf to bytes
+                response_bytes = response.SerializeToString()
+                return response_bytes
+            else:
+                return b""
+        except Exception as e:
+            print(f"Python failed to handle request {repr(request_bytes)}, error: {e}")
+            return b""
+
+    return wrapped_handler
+
+
+def execute_capability(remote_addr: str, capability: str, data: object) -> object:
+    try:
+        request = _make_message(data, capability)
+        request_bytes = request.SerializeToString()
+        response_bytes = run_class_method_message(remote_addr, request_bytes)
+        try:
+            response = _read_message(response_bytes)
+            if response is not None:
+                data = pickle.loads(response.obj)
+                return data
+            else:
+                print(f"Python failed to decode response: {repr(response_bytes)}")
+        except Exception as e:
+            print(f"Python failed to decode response: {e} {response_bytes}")
+    except Exception as e:
+        print(
+            f"Python failed to execute request: {e} {remote_addr} {capability} {data}"
+        )
+    return None

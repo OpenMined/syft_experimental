@@ -5,8 +5,8 @@ use crate::worker::config::{get_config, get_runtime_handle, Callback, Configurab
 use tonic::transport::Server;
 
 // create a tonic gRPC server
-async fn start_server(port: u32) -> Result<(), Box<dyn std::error::Error>> {
-    let addr = format!("[::1]:{}", port).parse()?;
+async fn start_server(iface: String, port: u32) -> Result<(), Box<dyn std::error::Error>> {
+    let addr = format!("{}:{}", iface, port).parse()?;
     let greeter = MyGreeter::default();
     let message = MyMessage::default();
     let config = ConfigService::default();
@@ -21,16 +21,16 @@ async fn start_server(port: u32) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 // launch gRPC server inside existing global tokio runtime
-pub fn start_on_runtime(port: u32) -> Result<(), Box<dyn std::error::Error>> {
-    let addr: String = format!("[::1]:{}", port).parse()?;
+pub fn start_on_runtime(iface: String, port: u32) -> Result<(), Box<dyn std::error::Error>> {
+    let addr: String = format!("{}:{}", iface, port).parse()?;
     println!("Starting node on {}", addr);
-    let status = get_runtime_handle()?.block_on(start_server(port));
+    let status = get_runtime_handle()?.block_on(start_server(iface.clone(), port));
     match status {
         Ok(()) => Ok(()),
         Err(err) => {
             if format!("{}", err).contains("Address already in use") {
                 println!("Port {} taken", port);
-                return start_on_runtime(port + 1);
+                return start_on_runtime(iface, port + 1);
             }
             Err(err)
         }
@@ -58,5 +58,6 @@ pub fn add_capability(
 #[tokio::main]
 pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
     let port: u32 = 50051;
-    start_server(port).await
+    let iface: String = "localhost".to_owned();
+    start_server(iface, port).await
 }

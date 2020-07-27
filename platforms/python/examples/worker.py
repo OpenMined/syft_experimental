@@ -1,58 +1,12 @@
 from syft import node
-from syft.protos import SyftMessageProto
-import pickle
-from typing import Optional, Callable
+from syft.message import create_handler
 
 import numpy as np
 
 
-counter = 1
-
-node.start()
-
-
-def make_message(obj: object) -> SyftMessageProto:
-    request = SyftMessageProto()
-    request.capability = "response"
-    request.obj = pickle.dumps(obj)
-    return request
-
-
-def read_message(request_bytes: bytes) -> Optional[SyftMessageProto]:
-    try:
-        request = SyftMessageProto()
-        request.ParseFromString(bytes(request_bytes))
-        return request
-    except Exception as e:
-        print(f"Python failed to decode request {repr(request_bytes)}, error: {e}")
-        return None
-
-
-def create_handler(handler: Callable[[object], object]) -> Callable[[bytes], bytes]:
-    def wrapped_handler(request_bytes: bytes) -> bytes:
-        global counter
-        try:
-            counter += 1
-            message = read_message(request_bytes)
-            if message is not None:
-                data = pickle.loads(message.obj)
-                result = handler(data)
-                response = make_message(result)
-
-                # serialize protobuf to bytes
-                response_bytes = response.SerializeToString()
-                print(
-                    f"Python counter: {counter} responding with Protobuf Message: {response}"
-                )
-                return response_bytes
-            else:
-                print(f"Python Callback failed")
-                return b""
-        except Exception as e:
-            print(f"Python failed handle request {repr(request_bytes)}, error: {e}")
-            return b""
-
-    return wrapped_handler
+port = 50051
+iface = "0.0.0.0"
+node.start(iface, port)
 
 
 def hello_handler(input: str) -> str:

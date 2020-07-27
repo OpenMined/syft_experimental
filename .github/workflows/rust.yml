@@ -1,4 +1,4 @@
-name: Rust
+name: Core
 
 on:
   push:
@@ -11,7 +11,11 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build Rust Core
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Install latest nightly
@@ -38,61 +42,3 @@ jobs:
       - name: Run tests
         working-directory: ./syft
         run: cargo test --verbose
-  pytest:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-          components: rustfmt, clippy
-      - name: Install protoc
-        run: |
-          PROTOC_VERSION=3.12.3
-          curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip"
-          unzip -d "${GITHUB_WORKSPACE}" "protoc-${PROTOC_VERSION}-linux-x86_64.zip" bin/protoc
-          chmod +x "${GITHUB_WORKSPACE}/bin/protoc"
-          ${GITHUB_WORKSPACE}/bin/protoc --version
-          export PATH=${GITHUB_WORKSPACE}/bin/:$PATH
-          which protoc
-          echo "::set-env name=PATH::$PATH"
-      - name: Run Python Tests
-        working-directory: ./core/platforms/python
-        run: |
-          which protoc
-          pip install --upgrade pip
-          pip install pipenv
-          pipenv --three
-          pipenv run pipenv install --dev --skip-lock
-          pipenv run maturin develop; pipenv run pytest
-  wheel:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-          components: rustfmt, clippy
-      - name: Install protoc
-        run: |
-          PROTOC_VERSION=3.12.3
-          curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip"
-          unzip -d "${GITHUB_WORKSPACE}" "protoc-${PROTOC_VERSION}-linux-x86_64.zip" bin/protoc
-          chmod +x "${GITHUB_WORKSPACE}/bin/protoc"
-          ${GITHUB_WORKSPACE}/bin/protoc --version
-          export PATH=${GITHUB_WORKSPACE}/bin/:$PATH
-          which protoc
-          echo "::set-env name=PATH::$PATH"
-      - name: Build Wheel
-        working-directory: ./core/platforms/python
-        run: |
-          which protoc
-          pip install --upgrade pip
-          pip install pipenv
-          pipenv --three
-          pipenv run pipenv install --dev --skip-lock
-          pipenv run maturin build -i python

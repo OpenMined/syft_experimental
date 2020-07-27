@@ -199,7 +199,6 @@ impl Configurable for WorkerConfig {
             Ok(mut _client) => match self.runtime.block_on(_client.send_message(request)) {
                 Ok(_response) => {
                     let message = _response.into_inner();
-                    println!("got response {:?}", message);
                     Ok(message)
                 }
                 Err(_err) => {

@@ -1,3 +1,6 @@
+![Core](https://github.com/OpenMined/syft_experimental/workflows/Core/badge.svg)
+![Python](https://github.com/OpenMined/syft_experimental/workflows/Python/badge.svg)
+
 # Syft Experiment
 
 This repo is a coordinated effort to build a Rust alternative for PySyft, with native
@@ -301,4 +304,102 @@ Build wheel and install wheel:
 ```
 $ maturin build -i python
 $ pip install `find -L ./target/wheels -name "*.whl"`
+```
+
+# Hello World Demo
+
+## Start Worker from Python
+
+```
+$ pipenv shell
+$ maturin develop
+$ python -i examples/worker.py
+```
+
+You should see:
+
+```
+Starting node on [::1]:50051
+Tokio thread started
+Capability registered: hello
+Capability registered: sum
+Capability registered: sum_np
+>>>
+```
+
+## Start Client from Python
+
+```
+$ pipenv shell
+$ maturin develop
+$ python -i examples/client.py
+```
+
+You should see:
+
+```
+Tokio thread started
+Capabilities returned: ["sum", "hello", "sum_np"]
+Node at: http://[::1]:50051 has capabilities: ['sum', 'hello', 'sum_np']
+Hello: Client 1
+6
+6
+>>>
+```
+
+Try issuing a command like:
+
+```
+>>>  execute_capability(target_addr, "sum", [i for i in range(0, 100)])
+4950
+>>>
+```
+
+## Jupyter Notebook
+
+You can run the Hello World demo with jupyter by opening the two notebooks.
+
+```
+$ pipenv shell
+$ maturin develop
+$ jupyter notebook
+```
+
+Make sure to initialize the worker and register capability functions before sending requests from the client.
+
+## Zero Config Port Forwarding
+
+If you want to test this between computers on different networks over the internet try ngrok.
+
+https://ngrok.com/
+
+### Linux
+
+### MacOS
+
+Install ngrok:
+
+```
+$ brew cask install ngrok
+```
+
+Start your worker and pick a port then run ngrok like so:
+
+```
+$ ngrok tcp 50051
+```
+
+You should see output like:
+
+```
+Forwarding                    tcp://0.tcp.ngrok.io:12345 -> localhost:50051
+```
+
+In your client use the address like so:
+
+```
+target_addr = "tcp://0.tcp.ngrok.io:12345"
+execute_capability(target_addr, "sum", [i for i in range(0, 10)])
+45
+>>>
 ```

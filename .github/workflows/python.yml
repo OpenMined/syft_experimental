@@ -1,0 +1,60 @@
+name: Python
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  pytest:
+    name: Run Tests and Build Wheel
+    strategy:
+      matrix:
+        os: [macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+      - name: Install protoc
+        run: |
+          PROTOC_VERSION=3.12.3
+          OS_ARCH=osx-x86_64
+          curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-${OS_ARCH}.zip"
+          unzip -d "${GITHUB_WORKSPACE}" "protoc-${PROTOC_VERSION}-${OS_ARCH}.zip" bin/protoc
+          chmod +x "${GITHUB_WORKSPACE}/bin/protoc"
+          ${GITHUB_WORKSPACE}/bin/protoc --version
+          export PATH=${GITHUB_WORKSPACE}/bin/:$PATH
+          which protoc
+          echo "::set-env name=PATH::$PATH"
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install pip and pipenv
+        run: |
+          pip install --upgrade pip
+          pip install pipenv
+          export PATH=/home/runner/.local/bin:$PATH
+          which pipenv
+          echo "::set-env name=PATH::$PATH"
+      - name: Run Python Tests
+        working-directory: ./platforms/python
+        run: |
+          pipenv --python=3.8
+          pipenv run pipenv install --skip-lock
+          pipenv run maturin develop
+          pipenv run pytest
+      - name: Build Wheel
+        working-directory: ./platforms/python
+        run: |
+          pipenv --python=3.8
+          pipenv run pipenv install --skip-lock
+          pipenv run maturin build -i python

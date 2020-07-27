@@ -9,6 +9,8 @@ import_fixer.fix_imports(locals(), __file__)
 # this goes from:
 # syft.message.syft_message.SyftMessage -> syft.message.SyftMessage
 
-from .syft_message import SyftMessage
+from .syft_message import SyftMessage, create_handler, execute_capability
 
 import_fixer.reexport(locals(), SyftMessage)
+import_fixer.reexport(locals(), create_handler)
+import_fixer.reexport(locals(), execute_capability)

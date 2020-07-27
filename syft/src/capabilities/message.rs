@@ -20,8 +20,6 @@ impl Message for MyMessage {
         &self,
         request: Request<SyftMessage>,
     ) -> Result<Response<SyftMessage>, Status> {
-        println!("Dispatching request: {:?}", request);
-
         // dispatch message to capability
         let config = get_config().clone();
         let message = request.into_inner();

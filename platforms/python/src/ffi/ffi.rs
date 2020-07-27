@@ -31,10 +31,10 @@ fn node(_py: Python, m: &PyModule) -> PyResult<()> {
 }
 
 #[pyfunction]
-fn start() -> PyResult<()> {
-    let port: u32 = 50051;
+fn start(local_iface: &PyUnicode, port: u32) -> PyResult<()> {
+    let iface: String = local_iface.extract()?;
     thread::spawn(move || {
-        let result = start_on_runtime(port);
+        let result = start_on_runtime(iface.clone(), port);
         match result {
             Ok(_) => println!("gRPC Server thread finished"),
             Err(err) => println!("gRPC Server thread failed with error. {}", err),

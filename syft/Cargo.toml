@@ -8,7 +8,7 @@ edition = "2018"
 name = "syft"
 
 [dependencies]
-tokio       = { version = "0.2.22", features = ["macros"] }
+tokio       = { version = "0.2.22", features = ["macros", "rt-threaded"] }
 tonic       = { version = "0.2.1", features = ["transport"] }
 prost       = "0.6.1"
 lazy_static = "1.4.0"
