@@ -403,3 +403,62 @@ execute_capability(target_addr, "sum", [i for i in range(0, 10)])
 45
 >>>
 ```
+
+## Apple
+
+This section describes usage on Apple platforms and as such requires MacOS.
+
+### Setup
+
+- Xcode
+- Xcode Command Line Tools
+
+```
+$ xcode-select --install
+```
+
+- Enable iphoneos SDK
+
+```
+$ sudo xcode-select --switch /Applications/Xcode.app
+```
+
+- swift-protobuf
+
+```
+$ brew install swift-protobuf
+```
+
+#### Rust
+
+- Cargo Lipo
+
+```
+$ cargo install cargo-lipo
+```
+
+- cbindgen
+
+```
+$ cargo install --force cbindgen
+```
+
+- Apple Rust Targets
+
+```
+$ rustup target add aarch64-apple-ios x86_64-apple-ios
+```
+
+### Build Static Library
+
+```
+$ cd platforms/apple
+$ ./build.sh
+```
+
+### Integrating Xcode Project
+
+- Add libsyft.a
+- Add Build Settings > Objective-C Bridging Header: `$(PROJECT_DIR)/include/syft.h`
+
+### Open Xcode Example

@@ -1,0 +1,13 @@
+[package]
+name    = "syft_apple"
+version = "0.1.0"
+authors = ["Ben Szymkow <simcof@gmail.com>", "Madhava Jay <me@madhavajay.com>"]
+edition = "2018"
+
+[lib]
+name       = "syft"
+crate-type = ["staticlib"]
+
+[dependencies]
+syft  = { version = "^0", path = "../../syft" }
+prost = "0.6.1"
