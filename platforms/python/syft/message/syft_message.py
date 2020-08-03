@@ -66,7 +66,7 @@ class SyftMessageProxy:
                 if obj is not None:
                     return obj
             except Exception as e:
-                print(f"Python failed to decode response {response_bytes}, error: {e}")
+                print(f"Python failed to decode response, error: {e}")
         return None
 
 
