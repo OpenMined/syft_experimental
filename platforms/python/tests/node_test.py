@@ -1,6 +1,7 @@
 import pickle
 import time
 import multiprocessing as mp
+
 from multiprocessing import Process, Event
 from typing import Dict, Any
 
@@ -10,6 +11,11 @@ from syft.protos import SyftMessageProto
 
 from syft.message.syft_message import SyftMessageProxy
 
+# fixes linux multiprocessing
+def setup_module() -> None:
+    mp.set_start_method("spawn", force=True)
+
+
 # this is required for pickle to work over multiprocess
 class TestCapabilities:
     @staticmethod
@@ -18,23 +24,13 @@ class TestCapabilities:
 
 
 port = 50051
-bind_iface = "0.0.0.0"
 iface = "127.0.0.1"
-
-
-def test_warmup() -> None:
-    caps = {"sum": TestCapabilities.sum_func}
-    with NodeProcess(bind_iface, port, caps):
-        target_addr = f"http://{iface}:{port}"
-
-        any_object = set([1, 2, 3])
-        _ = execute_capability(target_addr, "sum", any_object)
+target_addr = f"http://{iface}:{port}"
 
 
 def test_execute_capability() -> None:
     caps = {"sum": TestCapabilities.sum_func}
-    with NodeProcess(bind_iface, port, caps):
-        target_addr = f"http://{iface}:{port}"
+    with NodeProcess(iface, port, caps):
 
         any_object = set([1, 2, 3])
         answer = execute_capability(target_addr, "sum", any_object)
@@ -43,8 +39,7 @@ def test_execute_capability() -> None:
 
 def test_node_capabilities() -> None:
     caps = {"sum": TestCapabilities.sum_func}
-    with NodeProcess(bind_iface, port, caps):
-        target_addr = f"http://{iface}:{port}"
+    with NodeProcess(iface, port, caps):
 
         capabilities = node.request_capabilities(target_addr)
         assert capabilities == ["sum"]
@@ -52,8 +47,7 @@ def test_node_capabilities() -> None:
 
 def test_node_message() -> None:
     caps = {"sum": TestCapabilities.sum_func}
-    with NodeProcess(bind_iface, port, caps):
-        target_addr = f"http://{iface}:{port}"
+    with NodeProcess(iface, port, caps):
 
         any_object = set([1, 2, 3])
         message = SyftMessage(capability="sum", obj=any_object, id="1")
@@ -85,7 +79,6 @@ class NodeProcess:
 
     def startup(self) -> None:
         # start the node in a separate process
-        mp.set_start_method("spawn", force=True)  # fixes linux
         self.p = Process(
             target=NodeProcess.start_node,
             args=(self.event, self.iface, self.port, self.capabilities,),
@@ -94,7 +87,7 @@ class NodeProcess:
         self.p.start()
 
         # wait for startup
-        time.sleep(1)
+        time.sleep(0.5)
 
     @staticmethod
     def start_node(
