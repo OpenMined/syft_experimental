@@ -14,7 +14,7 @@ jobs:
     name: Run Tests and Build Wheel
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -24,12 +24,21 @@ jobs:
           toolchain: nightly
           override: true
           components: rustfmt, clippy
+      - name: Configure Ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          PROTOC_OS_ARCH=linux-x86_64
+          echo "::set-env name=PROTOC_OS_ARCH::$PROTOC_OS_ARCH"
+      - name: Configure MacOS
+        if: startsWith(matrix.os, 'macos')
+        run: |
+          PROTOC_OS_ARCH=osx-x86_64
+          echo "::set-env name=PROTOC_OS_ARCH::$PROTOC_OS_ARCH"
       - name: Install protoc
         run: |
-          PROTOC_VERSION=3.12.3
-          OS_ARCH=osx-x86_64
-          curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-${OS_ARCH}.zip"
-          unzip -d "${GITHUB_WORKSPACE}" "protoc-${PROTOC_VERSION}-${OS_ARCH}.zip" bin/protoc
+          PROTOC_VERSION=3.12.4
+          curl -LO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-${PROTOC_OS_ARCH}.zip"
+          unzip -d "${GITHUB_WORKSPACE}" "protoc-${PROTOC_VERSION}-${PROTOC_OS_ARCH}.zip" bin/protoc
           chmod +x "${GITHUB_WORKSPACE}/bin/protoc"
           ${GITHUB_WORKSPACE}/bin/protoc --version
           export PATH=${GITHUB_WORKSPACE}/bin/:$PATH
