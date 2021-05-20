@@ -84,12 +84,11 @@ pub struct WorkerConfig {
 impl Default for WorkerConfig {
     fn default() -> Self {
         WorkerConfig {
-            runtime: tokio::runtime::Builder::new()
-                .threaded_scheduler()
+            runtime: tokio::runtime::Builder::new_multi_thread()
                 .on_thread_start(|| {
                     println!("Tokio thread started");
                 })
-                .core_threads(1)
+                .worker_threads(1)
                 .enable_all()
                 .build()
                 .unwrap(),

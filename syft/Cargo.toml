@@ -8,12 +8,12 @@ edition = "2018"
 name = "syft"
 
 [dependencies]
-tokio       = { version = "0.2.22", features = ["macros", "rt-threaded"] }
-tonic       = { version = "0.2.1", features = ["transport"] }
-prost       = "0.6.1"
+tokio       = { version = "1.6.0", features = ["macros", "rt-multi-thread"] }
+tonic       = { version = "0.4.3", features = ["transport"] }
+prost       = "0.7.0"
 lazy_static = "1.4.0"
-uuid        = { version = "0.8.1", features = ["v4"] }
-url         = "2.1.1"
+uuid        = { version = "0.8.2", features = ["v4"] }
+url         = "2.2.2"
 
 [build-dependencies]
-tonic-build = "0.2"
+tonic-build = "0.4.2"

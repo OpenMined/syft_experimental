@@ -108,7 +108,7 @@ pub fn request_capabilities(target_addr: &PyUnicode) -> PyResult<Vec<String>> {
     let response = syft::client::request_capabilities(addr);
     match response {
         Ok(caps) => Ok(caps),
-        Err(_err) => Err(PyErr::new::<pyo3::exceptions::Exception, _>(
+        Err(_err) => Err(PyErr::new::<pyo3::exceptions::PyException, _>(
             "unable to run request_capabilities",
         )),
     }
@@ -141,7 +141,7 @@ fn run_class_method_message(
             to_bytes(&message, &mut response_bytes).expect("Rust Failed to encode message");
             return Ok(response_bytes);
         }
-        Err(_err) => Err(PyErr::new::<pyo3::exceptions::Exception, _>(
+        Err(_err) => Err(PyErr::new::<pyo3::exceptions::PyException, _>(
             "unable to run run_class_method_message",
         )),
     }
